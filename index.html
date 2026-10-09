@@ -1,0 +1,3278 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YANG JIANJING · Operations Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: '#c9a962',
+            cream: '#faf8f5',
+            ink: '#1a1a1a',
+            'ink-soft': '#2d2d2d',
+            'ink-muted': '#6b6b6b',
+            paper: '#f5f2ed',
+          },
+          fontFamily: {
+            display: ['"Playfair Display"', '"Noto Serif SC"', 'serif'],
+            serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'],
+            sans: ['Inter', '"Noto Serif SC"', 'sans-serif'],
+          },
+          animation: {
+            'spin-slow': 'spin 20s linear infinite',
+            'spin-paused': 'spin 20s linear infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'fade-up': 'fadeUp 0.8s ease-out forwards',
+            'needle-drop': 'needleDrop 1.5s ease-out forwards',
+            'equalizer': 'equalizer 1s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(30px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            needleDrop: {
+              '0%': { transform: 'rotate(-30deg)', transformOrigin: 'top right' },
+              '100%': { transform: 'rotate(0deg)', transformOrigin: 'top right' },
+            },
+            equalizer: {
+              '0%, 100%': { height: '4px' },
+              '50%': { height: '16px' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    img, video { max-width: 100%; height: auto; display: block; }
+    body { overflow-wrap: break-word; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #faf8f5;
+      color: #1a1a1a;
+      font-family: 'Inter', 'Noto Serif SC', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* 图片加载兜底样式 */
+    .img-fallback {
+      background: hsl(38, 30%, 20%);
+      min-height: 120px;
+      transition: opacity 0.3s ease;
+    }
+    .img-fallback[src^="data:image/svg"] {
+      object-fit: cover;
+    }
+
+    /* Noise texture overlay */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Vinyl record */
+    .vinyl {
+      position: relative;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #1a1a1a 0%, #1a1a1a 15%, #2a2a2a 16%, #1a1a1a 17%, #1a1a1a 20%, #2a2a2a 21%, #1a1a1a 22%, #1a1a1a 25%, #2a2a2a 26%, #1a1a1a 27%, #1a1a1a 30%, #2a2a2a 31%, #1a1a1a 32%, #1a1a1a 35%, #2a2a2a 36%, #1a1a1a 37%, #1a1a1a 40%, #2a2a2a 41%, #1a1a1a 42%, #1a1a1a 45%, #0a0a0a 46%, #1a1a1a 100%);
+      box-shadow:
+        0 0 0 2px #0a0a0a,
+        0 20px 60px rgba(0,0,0,0.4),
+        inset 0 0 40px rgba(0,0,0,0.5);
+    }
+
+    .vinyl::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 36%;
+      height: 36%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c9a962 0%, #e8d4a0 50%, #c9a962 100%);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .vinyl-photo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 33%;
+      height: 33%;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      z-index: 2;
+      box-shadow: inset 0 0 0 2px rgba(201, 169, 98, 0.6);
+    }
+
+    .vinyl::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8%;
+      height: 8%;
+      border-radius: 50%;
+      background: #0a0a0a;
+      box-shadow: inset 0 1px 3px rgba(255,255,255,0.1);
+    }
+
+    .vinyl-label-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28%;
+      height: 28%;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      text-align: center;
+      color: #1a1a1a;
+    }
+
+    /* Photo vinyl: text moved to outer ring, not covering face */
+    .vinyl-photo + .vinyl-label-text {
+      width: 70%;
+      height: 70%;
+      color: #c9a962;
+      justify-content: flex-start;
+      padding-top: 8%;
+      pointer-events: none;
+    }
+
+    .vinyl-photo + .vinyl-label-text span:last-child {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .vinyl-spinning {
+      animation: spin 20s linear infinite;
+    }
+
+    .vinyl-paused {
+      animation-play-state: paused;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Tonearm */
+    .tonearm {
+      position: absolute;
+      top: 8%;
+      right: 12%;
+      width: 4px;
+      height: 45%;
+      background: linear-gradient(to bottom, #8b8b8b, #c0c0c0, #8b8b8b);
+      border-radius: 2px;
+      transform-origin: top center;
+      transform: rotate(-25deg);
+      transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10;
+    }
+
+    .tonearm.playing {
+      transform: rotate(-5deg);
+    }
+
+    .tonearm::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c9a962, #8b7340);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .tonearm::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 8px;
+      background: #2a2a2a;
+      border-radius: 2px;
+    }
+
+    /* Tracklist sidebar */
+    .tracklist-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 260px;
+      background: #1a1a1a;
+      border-right: 1px solid #2a2a2a;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      flex-shrink: 0;
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .sidebar-nav {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: scroll !important;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: #c9a962 #1a1a1a;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+      width: 8px;
+      display: block !important;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb {
+      background: #c9a962;
+      border-radius: 4px;
+    }
+
+    .sidebar-nav::-webkit-scrollbar-thumb:hover {
+      background: #d4b872;
+    }
+
+    .track-item {
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .track-item:hover {
+      background: rgba(201, 169, 98, 0.08);
+      border-left-color: rgba(201, 169, 98, 0.3);
+    }
+
+    .track-item.active {
+      background: rgba(201, 169, 98, 0.12);
+      border-left-color: #c9a962;
+    }
+
+    .track-item.active .track-num {
+      color: #c9a962;
+    }
+
+    .track-item.active .track-title {
+      color: #fff;
+    }
+
+    .track-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      color: #6b6b6b;
+      font-weight: 600;
+      min-width: 28px;
+      letter-spacing: 1px;
+    }
+
+    .track-title {
+      font-size: 12px;
+      color: #9a9a9a;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* Equalizer */
+    .equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+    }
+
+    .eq-bar {
+      width: 3px;
+      background: #c9a962;
+      border-radius: 1px;
+      animation: eqBounce 0.9s ease-in-out infinite;
+    }
+
+    .eq-bar:nth-child(1) { animation-delay: 0s; }
+    .eq-bar:nth-child(2) { animation-delay: 0.15s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.3s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.45s; }
+
+    @keyframes eqBounce {
+      0%, 100% { height: 4px; }
+      50% { height: 16px; }
+    }
+
+    .equalizer.paused .eq-bar {
+      animation-play-state: paused;
+      height: 4px;
+    }
+
+    /* Player widget */
+    .player-widget {
+      flex-shrink: 0;
+      background: #0f0f0f;
+      border-top: 1px solid #2a2a2a;
+      padding: 16px 20px 20px;
+    }
+
+    .player-display {
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-family: 'Playfair Display', serif;
+      color: #c9a962;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-align: center;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .player-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .player-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      color: #c9a962;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .player-btn:hover {
+      background: #c9a962;
+      color: #1a1a1a;
+      transform: scale(1.1);
+    }
+
+    .player-btn.play-btn {
+      width: 44px;
+      height: 44px;
+      background: #c9a962;
+      color: #1a1a1a;
+    }
+
+    .player-btn.play-btn:hover {
+      background: #e8d4a0;
+    }
+
+    /* Volume control */
+    .volume-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2a2a;
+    }
+
+    .volume-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid #3a3a3a;
+      color: #c9a962;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .volume-btn:hover {
+      background: #c9a962;
+      color: #1a1a1a;
+      border-color: #c9a962;
+    }
+
+    .volume-slider-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #2a2a2a;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #c9a962;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(201, 169, 98, 0.5);
+      transition: transform 0.2s ease;
+    }
+
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .volume-slider::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #c9a962;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 6px rgba(201, 169, 98, 0.5);
+    }
+
+    .volume-percent {
+      font-size: 10px;
+      color: #6b6b6b;
+      font-family: 'Playfair Display', serif;
+      min-width: 28px;
+      text-align: right;
+      letter-spacing: 1px;
+    }
+
+    /* Music hint toast */
+    .music-hint {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 9998;
+      background: rgba(26, 26, 26, 0.92);
+      border: 1px solid rgba(201, 169, 98, 0.4);
+      color: #c9a962;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .music-hint.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .music-hint .hint-note {
+      display: inline-block;
+      animation: noteBounce 1.2s ease-in-out infinite;
+    }
+
+    @keyframes noteBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(5deg); }
+    }
+
+    /* Main content */
+    .main-content {
+      margin-left: 260px;
+    }
+
+    .track-section {
+      min-height: 100vh;
+      position: relative;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .track-label {
+      position: absolute;
+      top: 40px;
+      left: 60px;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #c9a962;
+      letter-spacing: 3px;
+      font-weight: 600;
+    }
+
+    .track-label::before {
+      content: '//';
+      margin-right: 10px;
+      color: #c9a962;
+      opacity: 0.6;
+    }
+
+    .page-number {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #6b6b6b;
+      letter-spacing: 2px;
+    }
+
+    .page-number::after {
+      content: ' //';
+      color: #c9a962;
+    }
+
+    /* Landing page */
+    .landing-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      position: relative;
+      background: linear-gradient(180deg, #faf8f5 0%, #f0ece4 100%);
+    }
+
+    .landing-vinyl-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin-bottom: 50px;
+    }
+
+    .tracklist-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .track-card {
+      background: #fff;
+      border: 1px solid #e8e4dc;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .track-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #c9a962;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .track-card:hover {
+      transform: translateY(-6px);
+      border-color: #c9a962;
+      box-shadow: 0 20px 40px rgba(201, 169, 98, 0.15);
+    }
+
+    .track-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .track-card-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: #c9a962;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .track-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .track-card-subtitle {
+      font-size: 11px;
+      color: #9a9a9a;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .track-card-desc {
+      font-size: 13px;
+      color: #6b6b6b;
+      line-height: 1.6;
+    }
+
+    /* Drop cap */
+    .drop-cap::first-letter {
+      float: left;
+      font-family: 'Playfair Display', serif;
+      font-size: 72px;
+      line-height: 0.9;
+      padding: 6px 12px 0 0;
+      color: #c9a962;
+      font-weight: 700;
+    }
+
+    /* Data number highlight */
+    .data-number {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: #c9a962;
+      line-height: 1;
+    }
+
+    /* Timeline */
+    .timeline-item {
+      position: relative;
+      padding-left: 32px;
+      border-left: 2px solid #e8e4dc;
+      padding-bottom: 40px;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -7px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #c9a962;
+      box-shadow: 0 0 0 4px #faf8f5;
+    }
+
+    /* Video card */
+    .video-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      background: #1a1a1a;
+    }
+
+    .video-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .video-card:hover .play-overlay {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .video-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      transition: all 0.4s ease;
+    }
+
+    .video-card:hover .video-thumb {
+      opacity: 0.6;
+      transform: scale(1.05);
+    }
+
+    .play-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(201, 169, 98, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .video-info {
+      padding: 14px 16px;
+      background: #fff;
+      border: 1px solid #e8e4dc;
+      border-top: none;
+    }
+
+    /* Skill bar */
+    .skill-bar {
+      height: 6px;
+      background: #e8e4dc;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #c9a962, #e8d4a0);
+      border-radius: 3px;
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .skill-bar-featured {
+      height: 10px;
+      border-radius: 5px;
+    }
+
+    .skill-fill-featured {
+      background: linear-gradient(90deg, #c9a962, #f5e6b8, #c9a962);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+      border-radius: 5px;
+      box-shadow: 0 0 12px rgba(201, 169, 98, 0.5);
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Fade in animation */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Divider slash */
+    .slash-divider {
+      color: #c9a962;
+      font-weight: 300;
+      margin: 0 12px;
+      opacity: 0.6;
+    }
+
+    /* Account matrix card */
+    .account-card {
+      background: #fff;
+      border: 1px solid #e8e4dc;
+      padding: 24px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .account-card:hover {
+      border-color: #c9a962;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(201, 169, 98, 0.12);
+    }
+
+    .account-card-link {
+      cursor: pointer;
+    }
+
+    .account-card-link:hover {
+      border-color: #c9a962;
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(201, 169, 98, 0.2);
+    }
+
+    .platform-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1a1a1a, #3a3a3a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c9a962;
+      margin-bottom: 16px;
+    }
+
+    /* IP work card */
+    .ip-work-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .ip-work-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    }
+
+    .ip-work-card:hover .ip-work-overlay {
+      opacity: 1;
+    }
+
+    .ip-work-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+    }
+
+    .ip-work-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Design card */
+    .design-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: zoom-in;
+      transition: all 0.4s ease;
+      background: #1a1a1a;
+      aspect-ratio: 3/4;
+    }
+
+    .design-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+
+    .design-card:hover .design-img {
+      transform: scale(1.08);
+    }
+
+    .design-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.5s ease;
+    }
+
+    .poster-img {
+      object-position: center top;
+    }
+
+    .design-card-caption {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: #6b6b6b;
+      font-family: Georgia, 'Noto Serif SC', serif;
+      letter-spacing: 0.5px;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(201, 169, 98, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #1a1a1a;
+    }
+
+    .lightbox-close:hover {
+      transform: rotate(90deg);
+      background: #c9a962;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 200;
+      width: 44px;
+      height: 44px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: #c9a962;
+      transition: all 0.3s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .tracklist-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .tracklist-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.4s ease;
+        width: 240px;
+      }
+
+      .tracklist-sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .track-section {
+        padding: 60px 24px;
+      }
+
+      .track-label {
+        left: 24px;
+        top: 24px;
+      }
+
+      .page-number {
+        right: 24px;
+        bottom: 24px;
+      }
+
+      .landing-page {
+        padding: 80px 24px 60px;
+      }
+
+      .landing-vinyl-container {
+        width: 220px;
+        height: 220px;
+        margin-bottom: 30px;
+      }
+
+      .tracklist-cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .drop-cap::first-letter {
+        font-size: 48px;
+      }
+    }
+
+    /* Section title style */
+    .section-title {
+      font-family: 'Playfair Display', 'Noto Serif SC', serif;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    /* Hero title wave letters */
+    .hero-title {
+      display: inline-flex;
+      justify-content: center;
+      gap: 0.02em;
+      cursor: default;
+      user-select: none;
+      perspective: 400px;
+    }
+
+    .hero-title .letter {
+      display: inline-block;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  color 0.4s ease,
+                  font-weight 0.4s ease,
+                  text-shadow 0.5s ease;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
+
+    .hero-title .letter.space {
+      width: 0.35em;
+    }
+
+    /* Music notes around vinyl */
+    .music-notes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .music-notes-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .music-notes-bg .music-note {
+      color: rgba(201, 169, 98, 0.12);
+    }
+
+    .bg-vinyl {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(560px, 70vw);
+      height: min(560px, 70vw);
+      opacity: 0.08;
+      z-index: 0;
+      animation: spin 60s linear infinite;
+      pointer-events: none;
+      filter: blur(0.5px);
+    }
+
+    .music-note {
+      position: absolute;
+      color: rgba(201, 169, 98, 0.1);
+      font-size: 20px;
+      transition: transform 0.08s linear, opacity 0.3s ease;
+      will-change: transform;
+    }
+
+    .music-note svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+
+    .section-subtitle {
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #c9a962;
+      font-weight: 500;
+    }
+
+    /* Partner Timeline */
+    .partner-timeline-wrap {
+      scrollbar-width: thin;
+      scrollbar-color: #c9a962 transparent;
+    }
+    .partner-timeline-wrap::-webkit-scrollbar {
+      height: 4px;
+    }
+    .partner-timeline-wrap::-webkit-scrollbar-track {
+      background: rgba(201, 169, 98, 0.1);
+    }
+    .partner-timeline-wrap::-webkit-scrollbar-thumb {
+      background: #c9a962;
+      border-radius: 2px;
+    }
+    .partner-logo {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .partner-node:hover .partner-logo {
+      transform: scale(1.12);
+      box-shadow: 0 0 24px rgba(201, 164, 74, 0.85);
+    }
+    .partner-label-top,
+    .partner-label-bottom {
+      transition: color 0.3s ease;
+    }
+    @keyframes bounce-slow {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-bounce-slow {
+      animation: bounce-slow 2s ease-in-out infinite;
+    }
+    .partner-node:hover .partner-label-top,
+    .partner-node:hover .partner-label-bottom {
+      color: #c9a962;
+    }
+
+    /* Award item */
+    .award-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid #e8e4dc;
+    }
+
+    .award-item:last-child {
+      border-bottom: none;
+    }
+
+    .award-item-cert {
+      cursor: pointer;
+      transition: background 0.2s ease, padding-left 0.2s ease;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .award-item-cert:hover {
+      background: linear-gradient(90deg, rgba(201, 169, 98, 0.08), transparent);
+    }
+
+    .award-view-hint {
+      color: #c9a962;
+      opacity: 0.5;
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: opacity 0.2s ease;
+    }
+
+    .award-item-cert:hover .award-view-hint {
+      opacity: 1;
+    }
+
+    /* Certificate preview tooltip */
+    .cert-preview {
+      position: fixed;
+      width: 300px;
+      background: #fff;
+      border: 2px solid #c9a962;
+      border-radius: 6px;
+      padding: 6px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(201, 169, 98, 0.3);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-6px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .cert-preview.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .cert-preview img {
+      width: 100%;
+      height: auto;
+      border-radius: 3px;
+      display: block;
+    }
+
+    /* Certificate modal */
+    .cert-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 40px;
+    }
+
+    .cert-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cert-modal-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      border: 3px solid #c9a962;
+      border-radius: 12px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 60px rgba(201, 169, 98, 0.2);
+      overflow: hidden;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: #fff;
+    }
+
+    .cert-modal.open .cert-modal-content {
+      transform: scale(1);
+    }
+
+    .cert-modal-content img {
+      max-width: 90vw;
+      max-height: 85vh;
+      display: block;
+      width: auto;
+      height: auto;
+    }
+
+    .cert-modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(201, 169, 98, 0.15);
+      border: 1px solid #c9a962;
+      color: #c9a962;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cert-modal-close:hover {
+      background: #c9a962;
+      color: #1a1a1a;
+      transform: rotate(90deg);
+    }
+
+    .award-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c9a962, #e8d4a0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #1a1a1a;
+    }
+
+    /* Gradient text */
+    .gold-gradient {
+      background: linear-gradient(135deg, #c9a962 0%, #e8d4a0 50%, #c9a962 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Magazine column layout */
+    .magazine-columns {
+      column-count: 2;
+      column-gap: 40px;
+      column-rule: 1px solid #e8e4dc;
+    }
+
+    @media (max-width: 768px) {
+      .magazine-columns {
+        column-count: 1;
+      }
+    }
+
+    /* Project data block */
+    .project-data-block {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 28px;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-data-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: #c9a962;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise-overlay"></div>
+
+  <!-- Hamburger Menu (Mobile) -->
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Sidebar Tracklist -->
+  <aside class="tracklist-sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="equalizer" id="eqSidebar">
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+        </div>
+        <span class="text-[10px] text-[#6b6b6b] tracking-[2px] uppercase">Now Playing</span>
+      </div>
+      <div class="font-display text-gold text-sm font-semibold tracking-wider" id="nowPlayingText">TRACK 01</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="track-item active" data-track="0" onclick="scrollToTrack(0)">
+        <span class="track-num">00</span>
+        <span class="track-title">COVER / 目录</span>
+      </div>
+      <div class="track-item" data-track="1" onclick="scrollToTrack(1)">
+        <span class="track-num">01</span>
+        <span class="track-title">封面 / Cover</span>
+      </div>
+      <div class="track-item" data-track="2" onclick="scrollToTrack(2)">
+        <span class="track-num">02</span>
+        <span class="track-title">关于我 / About</span>
+      </div>
+      <div class="track-item" data-track="3" onclick="scrollToTrack(3)">
+        <span class="track-num">03</span>
+        <span class="track-title">实习经历 / Experience</span>
+      </div>
+      <div class="track-item" data-track="4" onclick="scrollToTrack(4)">
+        <span class="track-num">04</span>
+        <span class="track-title">运营作品 / Works</span>
+      </div>
+      <div class="track-item" data-track="5" onclick="scrollToTrack(5)">
+        <span class="track-num">05</span>
+        <span class="track-title">技能奖项 / Skills</span>
+      </div>
+      <div class="track-item" data-track="6" onclick="scrollToTrack(6)">
+        <span class="track-num">06</span>
+        <span class="track-title">联系方式 / Contact</span>
+      </div>
+    </nav>
+
+    <!-- Player Widget -->
+    <div class="player-widget" id="playerWidget">
+    <div class="player-display" id="playerDisplay">
+      <span class="text-[10px] block mb-1 text-[#8b7340]">NOW PLAYING</span>
+      <span id="playerTrackName">COVER / 目录</span>
+    </div>
+    <div class="player-controls">
+      <button class="player-btn" onclick="prevTrack()" title="上一首">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+      </button>
+      <button class="player-btn play-btn" id="playBtn" onclick="togglePlay()" title="播放/暂停">
+        <svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <svg id="pauseIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+      </button>
+      <button class="player-btn" onclick="nextTrack()" title="下一首">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+      </button>
+    </div>
+    <div class="volume-control">
+      <button class="volume-btn" id="volumeBtn" onclick="toggleMute()" title="静音/取消静音">
+        <svg id="volumeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+        <svg id="muteIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+      </button>
+      <div class="volume-slider-container">
+        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="30" oninput="setVolume(this.value)" />
+      </div>
+      <span class="volume-percent" id="volumePercent">30%</span>
+    </div>
+  </div>
+  </aside>
+
+  <!-- Background Music -->
+  <audio id="bgm" loop preload="auto" onerror="handleBgmError()">
+    <source src="https://aka.doubaocdn.com/s/CeSDVC9wCT" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- TRACK 00: Landing / Cover Page -->
+    <section class="landing-page track-section" id="track-0">
+      <div class="track-label">TRACK 00 // COVER</div>
+
+      <div class="music-notes-bg" id="musicNotes"></div>
+
+      <div class="bg-vinyl vinyl vinyl-spinning" aria-hidden="true"></div>
+
+      <div class="text-center mb-10 fade-in-up relative z-10">
+        <p class="section-subtitle mb-4">OPERATIONS PORTFOLIO</p>
+        <h2 class="text-2xl md:text-3xl font-serif text-ink font-medium tracking-wide">
+          杨建菁 · 运营作品集
+        </h2>
+        <div class="flex items-center justify-center gap-3 mt-5">
+          <span class="w-12 h-px bg-gold"></span>
+          <span class="text-gold text-xs tracking-[3px]">//</span>
+          <span class="w-12 h-px bg-gold"></span>
+        </div>
+      </div>
+
+      <p class="text-ink-muted text-sm mb-10 text-center fade-in-up relative z-10" style="transition-delay: 0.1s">
+        点击下方曲目，开启运营之旅
+      </p>
+
+      <div class="tracklist-cards fade-in-up relative z-10" style="transition-delay: 0.2s">
+        <div class="track-card" onclick="scrollToTrack(1)">
+          <div class="track-card-num">01</div>
+          <div class="track-card-title">封面</div>
+          <div class="track-card-subtitle">Cover / Intro</div>
+          <div class="track-card-desc">个人信息与基本介绍，专辑开篇第一曲</div>
+        </div>
+        <div class="track-card" onclick="scrollToTrack(2)">
+          <div class="track-card-num">02</div>
+          <div class="track-card-title">关于我</div>
+          <div class="track-card-subtitle">About Me</div>
+          <div class="track-card-desc">自我评价与教育背景，了解背后的故事</div>
+        </div>
+        <div class="track-card" onclick="scrollToTrack(3)">
+          <div class="track-card-num">03</div>
+          <div class="track-card-title">实习经历</div>
+          <div class="track-card-subtitle">Experience</div>
+          <div class="track-card-desc">三段实习与项目作品，用数据说话</div>
+        </div>
+        <div class="track-card" onclick="scrollToTrack(4)">
+          <div class="track-card-num">04</div>
+          <div class="track-card-title">运营作品</div>
+          <div class="track-card-subtitle">Portfolio Works</div>
+          <div class="track-card-desc">视频、IP设计、账号矩阵，专业能力展示</div>
+        </div>
+        <div class="track-card" onclick="scrollToTrack(5)">
+          <div class="track-card-num">05</div>
+          <div class="track-card-title">技能奖项</div>
+          <div class="track-card-subtitle">Skills & Awards</div>
+          <div class="track-card-desc">专业技能与荣誉奖项，实力的证明</div>
+        </div>
+        <div class="track-card" onclick="scrollToTrack(6)">
+          <div class="track-card-num">06</div>
+          <div class="track-card-title">联系方式</div>
+          <div class="track-card-subtitle">Contact</div>
+          <div class="track-card-desc">期待与你合作，专辑最终章</div>
+        </div>
+      </div>
+
+      <div class="page-number">00 / 06</div>
+    </section>
+
+    <!-- TRACK 01: Cover / Intro -->
+    <section class="track-section" id="track-1" style="background: linear-gradient(135deg, #faf8f5 0%, #f0ece4 100%);">
+      <div class="track-label">TRACK 01 // 封面</div>
+
+      <div class="flex flex-col lg:flex-row items-center justify-center gap-16 py-12">
+        <div class="fade-in-up flex-shrink-0">
+          <div class="relative w-64 h-64 md:w-80 md:h-80">
+            <div class="vinyl vinyl-spinning w-full h-full" id="track1Vinyl">
+              <img class="vinyl-photo" src="https://aka.doubaocdn.com/s/FuPW1wr9I3" alt="杨建菁生活照" onerror="handleImgError(this)" />
+              <div class="vinyl-label-text">
+                <span class="font-display text-[11px] font-bold tracking-[0.25em]">YJJ</span>
+                <span class="font-display text-[9px] tracking-[0.3em] opacity-80">OPERATIONS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center lg:text-left fade-in-up" style="transition-delay: 0.2s">
+          <p class="section-subtitle mb-4">TRACK 01 // INTRO</p>
+          <h2 class="section-title text-5xl md:text-7xl lg:text-8xl mb-2">
+            杨建菁
+          </h2>
+          <p class="font-display text-2xl md:text-3xl text-gold italic mb-8">Yang Jianjing</p>
+
+          <div class="space-y-4 text-ink-soft">
+            <div class="flex items-center gap-4 justify-center lg:justify-start">
+              <span class="text-gold font-display font-bold text-sm tracking-widest w-20">AGE</span>
+              <span class="slash-divider">//</span>
+              <span class="text-lg">25 岁</span>
+            </div>
+            <div class="flex items-center gap-4 justify-center lg:justify-start">
+              <span class="text-gold font-display font-bold text-sm tracking-widest w-20">PHONE</span>
+              <span class="slash-divider">//</span>
+              <span class="text-lg">135 8630 6057</span>
+            </div>
+            <div class="flex items-center gap-4 justify-center lg:justify-start">
+              <span class="text-gold font-display font-bold text-sm tracking-widest w-20">EMAIL</span>
+              <span class="slash-divider">//</span>
+              <span class="text-lg break-all">1113088038@qq.com</span>
+            </div>
+            <div class="flex items-center gap-4 justify-center lg:justify-start">
+              <span class="text-gold font-display font-bold text-sm tracking-widest w-20">STATUS</span>
+              <span class="slash-divider">//</span>
+              <span class="text-lg">随时到岗</span>
+            </div>
+          </div>
+
+          <div class="mt-10 flex items-center gap-4 justify-center lg:justify-start">
+            <span class="w-16 h-px bg-gold"></span>
+            <span class="text-xs tracking-[4px] text-ink-muted uppercase">Operations Specialist</span>
+            <span class="w-16 h-px bg-gold"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-number">01 / 06</div>
+    </section>
+
+    <!-- TRACK 02: About Me -->
+    <section class="track-section" id="track-2">
+      <div class="track-label">TRACK 02 // 关于我</div>
+
+      <div class="max-w-5xl mx-auto w-full py-8">
+        <div class="text-center mb-12 fade-in-up">
+          <p class="section-subtitle mb-3">ABOUT ME</p>
+          <h2 class="section-title text-4xl md:text-5xl">关于我 <span class="text-gold font-light italic">//</span> About Me</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-5 gap-12">
+          <div class="lg:col-span-3 fade-in-up" style="transition-delay: 0.1s">
+            <p class="drop-cap font-serif text-lg leading-relaxed text-ink-soft mb-8">
+              新传硕士，专注<span class="text-gold font-bold">用户研究</span>与<span class="text-gold font-bold">内容运营</span>。拥有<span class="text-gold font-bold">虎扑</span>、<span class="text-gold font-bold">上海韩创</span>等头部互联网公司实习经历，深耕<span class="text-gold font-bold">活动运营</span>与<span class="text-gold font-bold">创作者生态</span>，擅长用<span class="text-gold font-bold">数据复盘</span>驱动内容增长。
+            </p>
+
+            <div class="space-y-4 mb-8">
+              <div class="flex items-start gap-4">
+                <span class="text-gold font-display font-bold text-sm mt-1">01</span>
+                <div>
+                  <p class="font-serif font-bold text-ink mb-1"><span class="text-gold">虎扑</span> · 用户研究 & 内容运营</p>
+                  <p class="text-sm text-ink-muted leading-relaxed">主导站外传播内容矩阵，单话题最高曝光 1143 万，周产短视频 1000+ 条</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-4">
+                <span class="text-gold font-display font-bold text-sm mt-1">02</span>
+                <div>
+                  <p class="font-serif font-bold text-ink mb-1"><span class="text-gold">上海韩创</span> · 创作者生态 & 活动运营</p>
+                  <p class="text-sm text-ink-muted leading-relaxed">搭建创作者成长体系，策划 3 场平台活动，月审核图片 3000+</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-3 mb-8">
+              <span class="px-4 py-2 bg-ink text-gold text-xs tracking-wider font-medium border border-gold/30">用户洞察</span>
+              <span class="px-4 py-2 bg-ink text-gold text-xs tracking-wider font-medium border border-gold/30">内容生产</span>
+              <span class="px-4 py-2 bg-ink text-gold text-xs tracking-wider font-medium border border-gold/30">活动运营</span>
+              <span class="px-4 py-2 bg-ink text-gold text-xs tracking-wider font-medium border border-gold/30">平台运营</span>
+              <span class="px-4 py-2 bg-ink text-gold text-xs tracking-wider font-medium border border-gold/30">AI创作</span>
+            </div>
+
+            <div class="flex items-center gap-4 pt-6 border-t border-border">
+              <span class="font-display text-gold text-3xl font-bold">"</span>
+              <p class="font-serif italic text-ink-muted">用数据驱动决策，用内容传递价值</p>
+            </div>
+          </div>
+
+          <div class="lg:col-span-2 space-y-6 fade-in-up" style="transition-delay: 0.3s">
+            <div class="bg-white border border-border p-6 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-16 h-16 bg-gold opacity-10 rounded-bl-full"></div>
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center text-gold">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs text-gold tracking-wider uppercase font-medium">Master</p>
+                  <p class="font-display font-bold text-lg">硕士</p>
+                </div>
+              </div>
+              <h3 class="font-serif font-bold text-base mb-1">闽南师范大学</h3>
+              <p class="text-sm text-ink-muted mb-3">新闻与传播 · 传播学方向</p>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-ink-muted">GPA</span>
+                <span class="data-number text-2xl">3.76</span>
+                <span class="text-xs text-ink-muted">/ 4.0</span>
+              </div>
+            </div>
+
+            <div class="bg-white border border-border p-6 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-16 h-16 bg-gold opacity-10 rounded-bl-full"></div>
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center text-gold">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                </div>
+                <div>
+                  <p class="text-xs text-gold tracking-wider uppercase font-medium">Bachelor</p>
+                  <p class="font-display font-bold text-lg">本科</p>
+                </div>
+              </div>
+              <h3 class="font-serif font-bold text-base mb-1">浙江农林大学</h3>
+              <p class="text-sm text-ink-muted mb-3">旅游管理 · 市场营销方向</p>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-ink-muted">GPA</span>
+                <span class="data-number text-2xl">3.97</span>
+                <span class="text-xs text-ink-muted">/ 4.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-number">02 / 06</div>
+    </section>
+
+    <!-- TRACK 03: Experience -->
+    <section class="track-section" id="track-3" style="background: linear-gradient(180deg, #faf8f5 0%, #f5f2ed 100%);">
+      <div class="track-label">TRACK 03 // 实习经历</div>
+
+      <div class="max-w-6xl mx-auto w-full py-8">
+        <div class="text-center mb-12 fade-in-up">
+          <p class="section-subtitle mb-3">EXPERIENCE & PROJECTS</p>
+          <h2 class="section-title text-4xl md:text-5xl">实习经历 <span class="text-gold font-light italic">//</span> 项目作品</h2>
+        </div>
+
+        <div class="space-y-12">
+          <!-- Experience 1 -->
+          <!-- Experience 1 -->
+          <div class="timeline-item fade-in-up">
+            <div class="timeline-dot"></div>
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                  <h3 class="font-display font-bold text-2xl">回响科技</h3>
+                  <span class="text-gold text-sm tracking-wider">ECHO TECH</span>
+                </div>
+                <p class="font-serif text-lg text-ink-soft mb-1">海外运营 · 潮玩方向</p>
+                <p class="text-sm text-ink-muted mb-4">2025.10 — 2026.07</p>
+                <p class="text-sm text-ink-soft leading-relaxed">
+                  负责潮玩 IP 矩阵海外多平台内容运营，覆盖 TikTok、Facebook 等渠道；擅长用户洞察与本地内容策划，针对不同市场产出适配内容；负责海外粉丝社群搭建与运营，提升用户粘性与转化。
+                </p>
+                <div class="mt-6">
+                  <a href="https://my.feishu.cn/wiki/LnRdwhkuXiT7uckhBJ0ctbfQnQd" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-gold text-gold text-base font-semibold hover:bg-gold hover:text-ink transition-all duration-300 tracking-wide">
+                    📄 查看完整项目文档
+                  </a>
+                </div>
+              </div>
+              <div class="project-data-block">
+                <p class="text-xs text-gold tracking-[3px] uppercase mb-4">// Project: 海外潮玩IP运营</p>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">10<span class="text-xl">+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">潮玩IP</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">400<span class="text-xl">k+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">TikTok总曝光</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">30<span class="text-xl">+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">Facebook粉丝社区</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">33<span class="text-xl">k+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">单条最高曝光</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience 2 -->
+          <div class="timeline-item fade-in-up" style="transition-delay: 0.15s">
+            <div class="timeline-dot"></div>
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                  <h3 class="font-display font-bold text-2xl">虎扑（上海）</h3>
+                  <span class="text-gold text-sm tracking-wider">HUPU</span>
+                </div>
+                <p class="font-serif text-lg text-ink-soft mb-1">用户分析与内容运营</p>
+                <p class="text-sm text-ink-muted mb-4">2025.07 — 2025.10</p>
+                <p class="text-sm text-ink-soft leading-relaxed">
+                  擅长问卷调查与访谈法洞察与分析用户，负责虎扑站外传播内容的策划与运营，主导校园类短视频内容矩阵搭建，通过数据分析优化内容策略，实现曝光量与用户增长的双重突破。
+                </p>
+                <div class="mt-6">
+                  <a href="https://my.feishu.cn/wiki/CIbPwhsIAi2c2ikTjiTcz27ened" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-gold text-gold text-base font-semibold hover:bg-gold hover:text-ink transition-all duration-300 tracking-wide">
+                    📄 查看完整项目文档
+                  </a>
+                </div>
+              </div>
+              <div class="project-data-block">
+                <p class="text-xs text-gold tracking-[3px] uppercase mb-4">// Project: HUPU站外传播项目</p>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">1143<span class="text-xl">w</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">单话题最高曝光</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">1000<span class="text-xl">+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">周产短视频</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">≤1<span class="text-xl">元</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">CPM 成本</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">28<span class="text-xl">个</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">运营话题</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience 3 -->
+          <div class="timeline-item fade-in-up" style="transition-delay: 0.3s">
+            <div class="timeline-dot"></div>
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                  <h3 class="font-display font-bold text-2xl">上海韩创网络</h3>
+                  <span class="text-gold text-sm tracking-wider">BIHUN AI</span>
+                </div>
+                <p class="font-serif text-lg text-ink-soft mb-1">AI绘图内容运营</p>
+                <p class="text-sm text-ink-muted mb-4">2025.02 — 2025.06</p>
+                <p class="text-sm text-ink-soft leading-relaxed">
+                  负责AI绘图平台内容审核与创作者管理，策划多场主题创作活动，提升平台内容质量与创作者活跃度。
+                </p>
+                <div class="mt-6">
+                  <a href="https://my.feishu.cn/wiki/Edv4wnHMdivb9mkk6SjcUu4vnmd" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-gold text-gold text-base font-semibold hover:bg-gold hover:text-ink transition-all duration-300 tracking-wide">
+                    📄 查看完整项目文档
+                  </a>
+                </div>
+              </div>
+              <div class="project-data-block">
+                <p class="text-xs text-gold tracking-[3px] uppercase mb-4">// Project: 笔魂AI绘图平台</p>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">3000<span class="text-xl">+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">月审核图片</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">80<span class="text-xl">+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">管理创作者</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">1<span class="text-xl">w+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">3场活动PV</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">80<span class="text-xl">%</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">合格率</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience 3.5: 媒介投放项目 -->
+          <div class="timeline-item fade-in-up" style="transition-delay: 0.38s">
+            <div class="timeline-dot"></div>
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                  <h3 class="font-display font-bold text-2xl">媒介投放项目</h3>
+                  <span class="text-gold text-sm tracking-wider">XIAOHONGSHU</span>
+                </div>
+                <p class="font-serif text-lg text-ink-soft mb-1">小红书媒介投放 & 达人合作</p>
+                <p class="text-sm text-ink-muted mb-4">2025 — 2026</p>
+                <p class="text-sm text-ink-soft leading-relaxed">
+                  负责小红书平台媒介投放与达人合作，制定投放策略，筛选匹配达人，跟踪投放数据，优化内容方向，提升品牌曝光与转化效果。
+                </p>
+                <div class="mt-6">
+                  <a href="https://my.feishu.cn/wiki/Juozw2iZPidkSHkhc1OcEUXGnHf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-gold text-gold text-base font-semibold hover:bg-gold hover:text-ink transition-all duration-300 tracking-wide">
+                    📄 查看完整项目文档
+                  </a>
+                </div>
+              </div>
+              <div class="project-data-block">
+                <p class="text-xs text-gold tracking-[3px] uppercase mb-4">// Project: 小红书达人投放</p>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">50<span class="text-xl">w+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">总曝光量</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">3.2<span class="text-xl">%</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">平均互动率</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">25<span class="text-xl">%</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">转化提升</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Experience 4 -->
+          <div class="timeline-item fade-in-up" style="transition-delay: 0.52s">
+            <div class="timeline-dot"></div>
+            <div class="grid lg:grid-cols-2 gap-8">
+              <div>
+                <div class="flex items-baseline gap-3 mb-2 flex-wrap">
+                  <h3 class="font-display font-bold text-2xl">杭州大头网络</h3>
+                  <span class="text-gold text-sm tracking-wider">DATOU</span>
+                </div>
+                <p class="font-serif text-lg text-ink-soft mb-1">社群运营</p>
+                <p class="text-sm text-ink-muted mb-4">2023.06 — 2023.09</p>
+                <p class="text-sm text-ink-soft leading-relaxed">
+                  负责垂类社群矩阵的搭建与运营，从0到1建立用户社群体系，策划社群活动提升用户活跃度与留存率，形成可复制的社群运营方法论。
+                </p>
+              </div>
+              <div class="project-data-block">
+                <p class="text-xs text-gold tracking-[3px] uppercase mb-4">// Project: 垂类社群矩阵搭建</p>
+                <div class="grid grid-cols-2 gap-6">
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">5-6<span class="text-xl">个</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">月建200人社群</p>
+                  </div>
+                  <div>
+                    <p class="data-number text-4xl md:text-5xl mb-1">60<span class="text-xl">%+</span></p>
+                    <p class="text-xs text-ink-muted tracking-wider">活动参与率</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-number">03 / 06</div>
+    </section>
+
+    <!-- TRACK 04: Works -->
+    <section class="track-section" id="track-4" style="min-height: auto;">
+      <div class="track-label">TRACK 04 // 运营作品</div>
+
+      <div class="max-w-6xl mx-auto w-full py-12">
+        <div class="text-center mb-16 fade-in-up">
+          <p class="section-subtitle mb-3">PORTFOLIO WORKS</p>
+          <h2 class="section-title text-4xl md:text-5xl">运营作品 <span class="text-gold font-light italic">//</span> 专业展示</h2>
+        </div>
+
+        <!-- Video Works -->
+        <div class="mb-20 fade-in-up">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-full bg-ink flex items-center justify-center text-gold flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-2xl">视频作品</h3>
+              <p class="text-sm text-ink-muted">Video Works · 短视频内容创作</p>
+            </div>
+            <div class="flex-1 h-px bg-border ml-4"></div>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <a href="https://pan.baidu.com/s/195BbVab4JpaPvrVwk6yPLg?pwd=hvqr" target="_blank" rel="noopener noreferrer" class="video-card block group">
+              <div class="relative overflow-hidden">
+                <img src="https://aka.doubaocdn.com/s/Co7DqpTcVm" alt="《难与不难》公益短片封面" class="video-thumb img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                <div class="play-overlay">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#1a1a1a"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+                <div class="absolute top-4 left-4 bg-gold text-ink text-xs font-bold px-4 py-1.5 tracking-widest z-10 shadow-lg">
+                  获奖
+                </div>
+              </div>
+              <div class="video-info">
+                <p class="font-serif font-semibold text-base mb-2">《难与不难》公益短片</p>
+                <p class="text-xs text-ink-muted leading-relaxed">市级"小血滴"公益原创剧社优秀奖作品</p>
+              </div>
+            </a>
+
+            <a href="https://pan.baidu.com/s/1GfKOWEnVJg7enEqC6J9dKw?pwd=nmby" target="_blank" rel="noopener noreferrer" class="video-card block group">
+              <div class="relative overflow-hidden">
+                <img src="https://aka.doubaocdn.com/s/wT5Rdyoy6J" alt="人物专访纪实短片封面" class="video-thumb img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                <div class="play-overlay">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#1a1a1a"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+                <div class="absolute top-4 left-4 bg-gold text-ink text-xs font-bold px-4 py-1.5 tracking-widest z-10 shadow-lg">
+                  获奖
+                </div>
+              </div>
+              <div class="video-info">
+                <p class="font-serif font-semibold text-base mb-2">人物专访纪实短片</p>
+                <p class="text-xs text-ink-muted leading-relaxed">深度访谈类纪实作品，人物故事记录</p>
+              </div>
+            </a>
+
+            <a href="https://pan.baidu.com/s/1ySTctqYUH8BQB0qx7dwB6A?pwd=iyyg" target="_blank" rel="noopener noreferrer" class="video-card block group">
+              <div class="relative overflow-hidden">
+                <img src="https://aka.doubaocdn.com/s/fwLV2CgkVX" alt="《全职高手》角色排行封面" class="video-thumb img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                <div class="play-overlay">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="#1a1a1a"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+              </div>
+              <div class="video-info">
+                <p class="font-serif font-semibold text-base mb-2">《全职高手》角色排行</p>
+                <p class="text-xs text-ink-muted leading-relaxed">二次元内容创作，游戏角色排行盘点</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Design Works -->
+        <div class="mb-20 fade-in-up" style="transition-delay: 0.1s">
+          <div class="flex items-center gap-4 mb-10">
+            <div class="w-12 h-12 rounded-full bg-ink flex items-center justify-center text-gold flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-2xl">设计作品</h3>
+              <p class="text-sm text-ink-muted">Design Works · 视觉营销设计</p>
+            </div>
+            <div class="flex-1 h-px bg-border ml-4"></div>
+          </div>
+
+          <!-- IP Works -->
+          <div class="mb-12">
+            <p class="text-gold text-xs tracking-[0.3em] font-bold mb-6 uppercase">// IP作品 · IP Design</p>
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/FtpZpQaoA3')">
+                  <img src="https://aka.doubaocdn.com/s/FtpZpQaoA3" alt="IP设计作品1" class="design-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">福建茶文化IP设计</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/blZV9yUv0I')">
+                  <img src="https://aka.doubaocdn.com/s/blZV9yUv0I" alt="IP设计作品2" class="design-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">福建茶文化IP设计</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/ePUt2orcvy')">
+                  <img src="https://aka.doubaocdn.com/s/ePUt2orcvy" alt="IP设计作品3" class="design-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">蛇年IP形象设计</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/4CLTBZsdzG')">
+                  <img src="https://aka.doubaocdn.com/s/4CLTBZsdzG" alt="IP设计作品4" class="design-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">蛇年IP形象设计</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Poster Works -->
+          <div>
+            <p class="text-gold text-xs tracking-[0.3em] font-bold mb-6 uppercase">// 海报作品 · Poster Design</p>
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/dgsZEZLGHe')">
+                  <img src="https://aka.doubaocdn.com/s/dgsZEZLGHe" alt="海报设计作品1" class="design-img poster-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">电商海报</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/HD8X6GUOs6')">
+                  <img src="https://aka.doubaocdn.com/s/HD8X6GUOs6" alt="海报设计作品2" class="design-img poster-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">娱乐海报</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/ric8fqdRvQ')">
+                  <img src="https://aka.doubaocdn.com/s/ric8fqdRvQ" alt="海报设计作品3" class="design-img poster-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">竞赛海报</p>
+              </div>
+              <div>
+                <div class="design-card" onclick="openLightbox('https://aka.doubaocdn.com/s/snG5dqsGHN')">
+                  <img src="https://aka.doubaocdn.com/s/snG5dqsGHN" alt="海报设计作品4" class="design-img poster-img img-fallback" loading="lazy" onerror="handleImgError(this)" />
+                </div>
+                <p class="design-card-caption">节日放假海报</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Matrix -->
+        <div class="fade-in-up" style="transition-delay: 0.2s">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="w-12 h-12 rounded-full bg-ink flex items-center justify-center text-gold flex-shrink-0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-2xl">运营账号矩阵</h3>
+              <p class="text-sm text-ink-muted">Account Matrix · 全平台运营规模</p>
+            </div>
+            <div class="flex-1 h-px bg-border ml-4"></div>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="account-card">
+              <div class="platform-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+              </div>
+              <h4 class="font-serif font-bold text-base mb-1">虎扑账号矩阵</h4>
+              <p class="text-xs text-ink-muted mb-3">300+ 账号矩阵运营</p>
+              <div class="pt-3 border-t border-border">
+                <p class="text-xs text-ink-muted">总播放量</p>
+                <p class="data-number text-2xl">2000<span class="text-sm">w+</span></p>
+              </div>
+            </div>
+
+            <div class="account-card">
+              <div class="platform-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <h4 class="font-serif font-bold text-base mb-1">社群矩阵</h4>
+              <p class="text-xs text-ink-muted mb-3">30+ 个 200人群</p>
+              <div class="pt-3 border-t border-border">
+                <p class="text-xs text-ink-muted">覆盖用户</p>
+                <p class="data-number text-2xl">6000<span class="text-sm">+</span></p>
+              </div>
+            </div>
+
+            <a href="https://xhslink.cn/m/3MRTBsuwsfj" target="_blank" rel="noopener noreferrer" class="account-card account-card-link block no-underline text-inherit">
+              <div class="platform-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+              <h4 class="font-serif font-bold text-base mb-1">小红书内容号</h4>
+              <p class="text-xs text-ink-muted mb-3">二创内容运营</p>
+              <div class="pt-3 border-t border-border">
+                <p class="text-xs text-ink-muted">笔记曝光</p>
+                <p class="data-number text-2xl">150<span class="text-sm">k+</span></p>
+              </div>
+              <div class="mt-3 flex items-center gap-1 text-xs text-gold font-medium">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                <span>8220+赞藏，查看主页</span>
+              </div>
+            </a>
+
+            <a href="https://www.tiktok.com/@ilovepopmart7777?_r=1&_d=elkb150786j0ca&sec_uid=MS4wLjABAAAAGGJ1_3YuCFrb5y7EonR2p62TTJao34SVzLhnVx38JXtj1XBI_SQi0_XJb7Y9WdGY&share_author_id=7536231033763906581&sharer_language=zh&source=h5_m&u_code=elkb1ek81k1kj3&item_author_type=1&utm_source=copy&tt_from=copy&enable_checksum=1&utm_medium=ios&share_link_id=AC342CD9-3B4E-4695-A63E-1A1AB4E7F22B&user_id=7536231033763906581&sec_user_id=MS4wLjABAAAAGGJ1_3YuCFrb5y7EonR2p62TTJao34SVzLhnVx38JXtj1XBI_SQi0_XJb7Y9WdGY&social_share_type=4&ug_btm=b8727,b0&utm_campaign=client_share&share_app_id=1233" target="_blank" rel="noopener noreferrer" class="account-card account-card-link block no-underline text-inherit">
+              <div class="platform-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              </div>
+              <h4 class="font-serif font-bold text-base mb-1">TikTok海外运营</h4>
+              <p class="text-xs text-ink-muted mb-3">海外潮玩内容运营</p>
+              <div class="pt-3 border-t border-border">
+                <p class="text-xs text-ink-muted">总曝光</p>
+                <p class="data-number text-2xl">400<span class="text-sm">k+</span></p>
+              </div>
+              <div class="mt-3 flex items-center gap-1 text-xs text-gold font-medium">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+                <span>查看TikTok主页</span>
+              </div>
+            </a>
+           </div>
+         </div>
+
+         <!-- Partner Platforms -->
+         <div class="mt-16 fade-in-up" style="transition-delay: 0.3s">
+           <p class="text-gold text-xs tracking-[0.3em] font-bold mb-8 uppercase">// 公众号作品 · WeChat Official Accounts</p>
+           <div class="partner-timeline-wrap overflow-x-auto pb-4 -mx-4 px-4">
+             <div class="partner-timeline relative flex items-center min-w-[720px] py-12">
+               <!-- Timeline line -->
+               <div class="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent -translate-y-1/2"></div>
+               <!-- Nodes -->
+               <div class="relative flex justify-between w-full px-4">
+                  <div class="partner-node flex flex-col items-center" style="width: 140px;">
+                    <a href="https://m.chinanews.com/wap/detail/chs/zw/10304371.shtml" target="_blank" rel="noopener noreferrer" class="partner-logo w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-gold shadow-[0_0_16px_rgba(201,164,74,0.5)] z-10 flex-shrink-0 block">
+                      <img src="https://aka.doubaocdn.com/s/61Cqqz3IFH" alt="中国新闻网" class="w-full h-full object-cover" />
+                    </a>
+                    <p class="partner-label-top text-sm text-white font-serif font-medium mt-3 text-center leading-tight">中国新闻网</p>
+                  </div>
+                  <div class="partner-node flex flex-col items-center" style="width: 140px;">
+                    <p class="partner-label-bottom text-sm text-white font-serif font-medium mb-3 text-center leading-tight order-first">闽南师范大学<br/>新闻传播学院</p>
+                    <a href="https://mp.weixin.qq.com/s/iw1WglpP5kQuJtDCps54iw" target="_blank" rel="noopener noreferrer" class="partner-logo w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-gold shadow-[0_0_16px_rgba(201,164,74,0.5)] z-10 flex-shrink-0 block">
+                      <img src="https://aka.doubaocdn.com/s/2mxZ2AJuOB" alt="闽南师范大学新闻传播学院" class="w-full h-full object-cover" />
+                    </a>
+                  </div>
+                  <div class="partner-node flex flex-col items-center" style="width: 140px;">
+                    <a href="https://mp.weixin.qq.com/s/CAW7GhxOvN8RqUUamOe_8w" target="_blank" rel="noopener noreferrer" class="partner-logo w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-gold shadow-[0_0_16px_rgba(201,164,74,0.5)] z-10 flex-shrink-0 block">
+                      <img src="https://aka.doubaocdn.com/s/8DuQLj42o0" alt="园林青年" class="w-full h-full object-cover" />
+                    </a>
+                    <p class="partner-label-top text-sm text-white font-serif font-medium mt-3 text-center leading-tight">园林青年</p>
+                  </div>
+                  <div class="partner-node flex flex-col items-center" style="width: 140px;">
+                    <p class="partner-label-bottom text-sm text-white font-serif font-medium mb-3 text-center leading-tight order-first">闽南师范大学<br/>研究生会</p>
+                    <a href="https://mp.weixin.qq.com/s/o0OuSivUVd54a5_ZxzyK_Q" target="_blank" rel="noopener noreferrer" class="partner-logo w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-gold shadow-[0_0_16px_rgba(201,164,74,0.5)] z-10 flex-shrink-0 block">
+                      <img src="https://aka.doubaocdn.com/s/rsvX9EHMQL" alt="闽南师范大学研究生会" class="w-full h-full object-cover" />
+                    </a>
+                  </div>
+                  <div class="partner-node flex flex-col items-center" style="width: 140px;">
+                    <a href="https://mp.weixin.qq.com/s/WE1IEuKMJkPSTNI--1DNRw" target="_blank" rel="noopener noreferrer" class="partner-logo w-[60px] h-[60px] rounded-full overflow-hidden border-2 border-gold shadow-[0_0_16px_rgba(201,164,74,0.5)] z-10 flex-shrink-0 block">
+                      <img src="https://aka.doubaocdn.com/s/Q4xmZqYSU7" alt="闽南文化" class="w-full h-full object-cover" />
+                    </a>
+                    <p class="partner-label-top text-sm text-white font-serif font-medium mt-3 text-center leading-tight">闽南文化</p>
+                  </div>
+               </div>
+               </div>
+             </div>
+           </div>
+          <p class="text-center text-gold text-sm mt-2 tracking-wider animate-bounce-slow">
+            <span class="inline-block mr-1">↑</span>点击上方logo查看详情
+          </p>
+         </div>
+
+       <div class="page-number">04 / 06</div>
+    </section>
+
+    <!-- TRACK 05: Skills & Awards -->
+    <section class="track-section" id="track-5" style="background: linear-gradient(180deg, #f5f2ed 0%, #faf8f5 100%);">
+      <div class="track-label">TRACK 05 // 技能奖项</div>
+
+      <div class="max-w-6xl mx-auto w-full py-8">
+        <div class="text-center mb-12 fade-in-up">
+          <p class="section-subtitle mb-3">SKILLS & AWARDS</p>
+          <h2 class="section-title text-4xl md:text-5xl">技能奖项 <span class="text-gold font-light italic">//</span> 实力证明</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-16">
+          <!-- Skills -->
+          <div class="fade-in-up">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-1 h-8 bg-gold"></div>
+              <h3 class="font-display font-bold text-2xl">专业技能</h3>
+            </div>
+
+            <div class="space-y-6">
+              <!-- AI 创作（重点突出） -->
+              <div class="skill-item-featured p-5 rounded-lg border border-gold/30 bg-gradient-to-r from-gold/5 to-transparent">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gold flex items-center justify-center flex-shrink-0">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2.5"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>
+                    </div>
+                    <div>
+                      <span class="font-serif font-bold text-lg block">AI创作</span>
+                      <span class="text-xs text-ink-muted">AI设计网站 / AI绘图 / AI文字写作 / AI内容生产</span>
+                    </div>
+                  </div>
+                  <span class="text-gold font-display font-bold text-xl">98%</span>
+                </div>
+                <div class="skill-bar skill-bar-featured">
+                  <div class="skill-fill skill-fill-featured" data-width="98"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-2">
+                  <span class="font-serif font-medium">用户洞察 / User Insight</span>
+                  <span class="text-gold font-display font-bold">90%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill" data-width="90"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-2">
+                  <span class="font-serif font-medium">内容生产 / Content Production</span>
+                  <span class="text-gold font-display font-bold">95%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill" data-width="95"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-2">
+                  <span class="font-serif font-medium">活动运营 / Event Operations</span>
+                  <span class="text-gold font-display font-bold">92%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill" data-width="92"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between mb-2">
+                  <span class="font-serif font-medium">平台运营 / Platform Ops</span>
+                  <span class="text-gold font-display font-bold">93%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-fill" data-width="93"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-10 grid grid-cols-3 gap-4">
+              <div class="bg-white border border-border p-4 text-center">
+                <p class="data-number text-3xl mb-1">PS</p>
+                <p class="text-xs text-ink-muted">Photoshop</p>
+              </div>
+              <div class="bg-white border border-border p-4 text-center">
+                <p class="data-number text-3xl mb-1">PR</p>
+                <p class="text-xs text-ink-muted">Premiere</p>
+              </div>
+              <div class="bg-white border border-border p-4 text-center">
+                <p class="data-number text-2xl mb-1">OFFICE</p>
+                <p class="text-xs text-ink-muted whitespace-nowrap">Office Suite</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Awards -->
+          <div class="fade-in-up" style="transition-delay: 0.2s">
+            <div class="flex items-center gap-3 mb-8">
+              <div class="w-1 h-8 bg-gold"></div>
+              <h3 class="font-display font-bold text-2xl">荣誉奖项</h3>
+            </div>
+
+            <div class="space-y-1">
+              <div class="award-item award-item-cert" data-cert="https://aka.doubaocdn.com/s/9Hkq1wrNbs">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">连续7年学业奖学金</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">本硕连续七年获得</p>
+                </div>
+                <div class="award-view-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+
+              <div class="award-item award-item-cert" data-cert="https://aka.doubaocdn.com/s/mfew1wrNbs">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">亚洲大学生创意设计展佳作奖</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">国家级 · 创意设计类</p>
+                </div>
+                <div class="award-view-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+
+              <div class="award-item award-item-cert" data-cert="https://aka.doubaocdn.com/s/MNvs1wrNbs">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">江西省乡村振兴创新创意大赛二等奖</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">省级 · 策划类</p>
+                </div>
+                <div class="award-view-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+
+              <div class="award-item award-item-cert" data-cert="https://aka.doubaocdn.com/s/JCm81wrNbt">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">福建省第十一届大学生影像大赛二等奖和三等奖</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">省级 · 影像类</p>
+                </div>
+                <div class="award-view-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+
+              <div class="award-item award-item-cert" data-cert="https://aka.doubaocdn.com/s/4c3Y1wrNbt">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">福建省传播学会2024年学术年会青年学者论文评比三等奖</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">省级 · 论文类</p>
+                </div>
+                <div class="award-view-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+
+              <div class="award-item">
+                <div class="award-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-serif font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis">25+公众号推文产出</p>
+                  <p class="text-xs text-ink-muted whitespace-nowrap overflow-hidden text-ellipsis">单篇被中国新闻网收录</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-number">05 / 06</div>
+    </section>
+
+    <!-- TRACK 06: Contact -->
+    <section class="track-section" id="track-6" style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); color: #fff;">
+      <div class="track-label" style="color: #c9a962;">TRACK 06 // 联系方式</div>
+
+      <div class="max-w-4xl mx-auto w-full flex flex-col items-center justify-center py-12 text-center">
+        <div class="relative w-56 h-56 md:w-72 md:h-72 mb-12 fade-in-up">
+          <div class="vinyl vinyl-spinning w-full h-full" id="track6Vinyl">
+            <img class="vinyl-photo" src="https://aka.doubaocdn.com/s/FuPW1wr9I3" alt="杨建菁生活照" onerror="handleImgError(this)" />
+            <div class="vinyl-label-text">
+              <span class="font-display text-[10px] font-bold tracking-[0.3em]">THANK</span>
+              <span class="font-display text-[10px] font-bold tracking-[0.3em]">YOU</span>
+            </div>
+          </div>
+          <div class="tonearm playing" style="top: 6%; right: 8%;"></div>
+        </div>
+
+        <h2 class="section-title text-5xl md:text-7xl mb-4 fade-in-up text-white" style="transition-delay: 0.1s">
+          THANK YOU
+        </h2>
+        <p class="font-serif text-xl md:text-2xl text-gold italic mb-12 fade-in-up" style="transition-delay: 0.2s">
+           感谢观看 · 期待合作
+        </p>
+
+        <div class="grid md:grid-cols-3 gap-8 w-full max-w-2xl mb-12 fade-in-up" style="transition-delay: 0.3s">
+          <div class="text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full border border-gold flex items-center justify-center text-gold">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <p class="text-xs text-gray-400 tracking-widest uppercase mb-2">Phone</p>
+            <p class="font-display text-lg text-white">135 8630 6057</p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full border border-gold flex items-center justify-center text-gold">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <p class="text-xs text-gray-400 tracking-widest uppercase mb-2">Email</p>
+            <p class="font-display text-base text-white break-all">1113088038@qq.com</p>
+          </div>
+
+          <div class="text-center">
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full border border-gold flex items-center justify-center text-gold">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <p class="text-xs text-gray-400 tracking-widest uppercase mb-2">Status</p>
+            <p class="font-display text-lg text-gold">随时到岗</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 fade-in-up" style="transition-delay: 0.4s">
+          <span class="w-16 h-px bg-gold"></span>
+          <span class="font-display text-gold text-sm tracking-[6px]">END</span>
+          <span class="w-16 h-px bg-gold"></span>
+        </div>
+      </div>
+
+      <div class="page-number" style="color: #6b6b6b;">06 / 06</div>
+    </section>
+  </main>
+
+  <script>
+    // State
+    let isPlaying = false;
+    let currentTrack = 0;
+    const totalTracks = 7; // 0-6
+
+    const trackNames = [
+      'COVER / 目录',
+      '封面 / Cover',
+      '关于我 / About',
+      '实习经历 / Experience',
+      '运营作品 / Works',
+      '技能奖项 / Skills',
+      '联系方式 / Contact'
+    ];
+
+    // BGM 加载失败兜底
+    function handleBgmError() {
+      console.warn('BGM 加载失败，已静默跳过');
+      const playBtn = document.getElementById('playBtn');
+      if (playBtn) playBtn.style.opacity = '0.4';
+    }
+
+    // 全局图片加载失败兜底处理
+    function handleImgError(img) {
+      if (img.dataset.fallbackApplied) return;
+      img.dataset.fallbackApplied = '1';
+      // 用金色渐变占位 + alt 文字兜底，保证视觉不崩
+      img.style.background = 'linear-gradient(135deg, hsl(38, 70%, 55%), hsl(38, 60%, 35%))';
+      img.style.color = 'hsl(40, 100%, 92%)';
+      img.style.display = 'flex';
+      img.style.alignItems = 'center';
+      img.style.justifyContent = 'center';
+      img.style.fontSize = '14px';
+      img.style.textAlign = 'center';
+      img.style.padding = '16px';
+      img.style.objectFit = 'cover';
+      // 用 SVG 占位图替换 src，避免裂图图标
+      const altText = img.alt || '图片加载失败';
+      img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23c9a44a"/><stop offset="100%" stop-color="%238a6d24"/></linearGradient></defs><rect width="400" height="300" fill="url(%23g)"/><text x="50%" y="50%" font-family="sans-serif" font-size="16" fill="%23fff4d6" text-anchor="middle" dominant-baseline="middle">' + altText + '</text></svg>'
+      );
+    }
+
+    // BGM Audio
+    const bgm = document.getElementById('bgm');
+    let isMuted = true; // Start muted for autoplay policy
+    let currentVolume = 0.25;
+    let audioUnlocked = false;
+
+    // Web Audio API for spectrum visualization
+    let audioCtx = null;
+    let analyser = null;
+    let sourceNode = null;
+    let dataArray = null;
+    let noteAnimFrame = null;
+    let noteElements = [];
+
+    function initAudioContext() {
+      if (audioCtx) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) {
+          console.warn('Web Audio API not supported');
+          return;
+        }
+        audioCtx = new AudioCtx();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 128;
+        analyser.smoothingTimeConstant = 0.55;
+        sourceNode = audioCtx.createMediaElementSource(bgm);
+        sourceNode.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+      } catch (e) {
+        console.warn('Web Audio init failed:', e);
+        audioCtx = null;
+        analyser = null;
+      }
+    }
+
+    // Create music note elements around vinyl
+    function createMusicNotes() {
+      const container = document.getElementById('musicNotes');
+      if (!container) return;
+
+      const notePositions = [
+        { top: '8%', left: '6%', size: 32, delay: 0 },
+        { top: '15%', left: '20%', size: 24, delay: 0.1 },
+        { top: '5%', left: '40%', size: 28, delay: 0.2 },
+        { top: '12%', right: '15%', size: 36, delay: 0.15 },
+        { top: '25%', right: '5%', size: 22, delay: 0.25 },
+        { top: '40%', left: '3%', size: 30, delay: 0.05 },
+        { top: '55%', right: '8%', size: 26, delay: 0.2 },
+        { top: '70%', left: '10%', size: 34, delay: 0.1 },
+        { top: '80%', right: '20%', size: 28, delay: 0.3 },
+        { top: '90%', left: '25%', size: 24, delay: 0.15 },
+        { top: '85%', right: '5%', size: 30, delay: 0.25 },
+        { top: '60%', left: '45%', size: 0, delay: 0 },
+      ];
+
+      const noteSvgs = [
+        '<svg viewBox="0 0 24 24"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z"/></svg>',
+        '<svg viewBox="0 0 24 24"><path d="M9 3v13.55A4 4 0 1 0 11 20V7h8V3H9z"/></svg>',
+        '<svg viewBox="0 0 24 24"><path d="M12 3v13.55A4 4 0 1 0 14 17V7h4V3h-6zM8 17a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>',
+      ];
+
+      notePositions.slice(0, 11).forEach((pos, i) => {
+        const note = document.createElement('div');
+        note.className = 'music-note';
+        note.style.top = pos.top;
+        note.style.left = pos.left !== undefined ? pos.left : 'auto';
+        note.style.right = pos.right !== undefined ? pos.right : 'auto';
+        note.style.fontSize = pos.size + 'px';
+        note.style.width = pos.size + 'px';
+        note.style.height = pos.size + 'px';
+        note.innerHTML = noteSvgs[i % noteSvgs.length];
+        note.dataset.baseY = 0;
+        note.dataset.delay = pos.delay;
+        note.dataset.freqIndex = i % 8;
+        note.dataset.sensitivity = 1.2 + Math.random() * 0.8;
+        container.appendChild(note);
+        noteElements.push(note);
+      });
+    }
+
+    // Animate music notes based on audio spectrum
+    function animateNotes() {
+      if (!analyser || !isPlaying) {
+        // Reset notes when paused
+        noteElements.forEach(note => {
+          note.style.transform = 'translateY(0) scale(1)';
+          note.style.opacity = '0.1';
+        });
+        noteAnimFrame = null;
+        return;
+      }
+
+      analyser.getByteFrequencyData(dataArray);
+
+      noteElements.forEach((note, i) => {
+        const freqIdx = parseInt(note.dataset.freqIndex) + (i % 3);
+        const value = dataArray[Math.min(freqIdx, dataArray.length - 1)] || 0;
+        const normalized = value / 255;
+        const sensitivity = parseFloat(note.dataset.sensitivity);
+        const jumpHeight = normalized * 55 * sensitivity;
+        const scale = 1 + normalized * 0.5 * sensitivity;
+        const opacity = 0.07 + normalized * 0.12;
+
+        note.style.transform = `translateY(${-jumpHeight}px) scale(${scale})`;
+        note.style.opacity = opacity;
+      });
+
+      noteAnimFrame = requestAnimationFrame(animateNotes);
+    }
+
+    // Initialize hero title wave letters - wave converges from sides to center
+    function initHeroTitle() {
+      const title = document.getElementById('heroTitle');
+      if (!title) return;
+      const text = title.textContent;
+      title.innerHTML = '';
+
+      const letters = [];
+      [...text].forEach((char, i) => {
+        const span = document.createElement('span');
+        span.className = 'letter' + (char === ' ' ? ' space' : '');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.dataset.index = i;
+        title.appendChild(span);
+        letters.push(span);
+      });
+
+      const totalLetters = letters.length;
+      const mid = (totalLetters - 1) / 2;
+      const waveDelay = 45; // ms between each letter from edge
+
+      // Calculate delay: letters closer to center have longer delay
+      // Wave starts from both sides and converges to center
+      function getCenterDelay(i) {
+        const distFromEdge = Math.min(i, totalLetters - 1 - i);
+        const maxDistFromEdge = Math.floor(totalLetters / 2);
+        // Invert: edges first (0 delay), center last (max delay)
+        return (maxDistFromEdge - distFromEdge) * waveDelay;
+      }
+
+      function getScaleForIndex(i) {
+        const distFromMid = Math.abs(i - mid);
+        const maxDist = totalLetters / 2;
+        // Center: 2.0x, edges: 1.1x, smooth curve
+        const t = 1 - distFromMid / maxDist;
+        // Ease with cubic curve for more dramatic center peak
+        const eased = t * t * t;
+        return 1 + eased * 1.0; // 1.0 to 2.0
+      }
+
+      function getTranslateY(i) {
+        const distFromMid = Math.abs(i - mid);
+        const maxDist = totalLetters / 2;
+        const t = 1 - distFromMid / maxDist;
+        const eased = t * t;
+        return -14 * eased; // 0 to -14px
+      }
+
+      function triggerWave() {
+        letters.forEach((letter, i) => {
+          const delay = getCenterDelay(i);
+          setTimeout(() => {
+            const scale = getScaleForIndex(i);
+            const ty = getTranslateY(i);
+            letter.style.transform = `translateY(${ty}px) scale(${scale})`;
+            letter.style.color = '#c9a962';
+            letter.style.fontWeight = '900';
+            letter.style.textShadow = '0 0 24px rgba(201, 169, 98, 0.6), 0 0 48px rgba(201, 169, 98, 0.3)';
+            letter.style.zIndex = Math.round((1 - Math.abs(i - mid) / mid) * 10);
+          }, delay);
+        });
+      }
+
+      function resetWave() {
+        letters.forEach((letter, i) => {
+          const delay = getCenterDelay(i) * 0.4; // Faster reset from center out
+          setTimeout(() => {
+            letter.style.transform = 'translateY(0) scale(1)';
+            letter.style.color = '';
+            letter.style.fontWeight = '';
+            letter.style.textShadow = '';
+            letter.style.zIndex = '';
+          }, delay);
+        });
+      }
+
+      title.addEventListener('mouseenter', () => {
+        triggerWave();
+      });
+
+      title.addEventListener('mouseleave', () => {
+        resetWave();
+      });
+    }
+
+    // Initialize BGM
+    function initBGM() {
+      bgm.volume = currentVolume;
+      bgm.muted = false;
+      isMuted = false;
+      bgm.loop = true;
+      bgm.preload = 'auto';
+      bgm.crossOrigin = 'anonymous';
+      
+      // Update slider display
+      const volumeSlider = document.getElementById('volumeSlider');
+      const volumePercent = document.getElementById('volumePercent');
+      if (volumeSlider) volumeSlider.value = 25;
+      if (volumePercent) volumePercent.textContent = '25%';
+      
+      // Bind audio events for true state sync
+      bgm.addEventListener('play', () => {
+        isPlaying = true;
+        // Init audio context on first play (needs user gesture)
+        if (!audioCtx) {
+          initAudioContext();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        updatePlayUI();
+        if (!noteAnimFrame && analyser) {
+          animateNotes();
+        }
+      });
+      
+      bgm.addEventListener('pause', () => {
+        isPlaying = false;
+        updatePlayUI();
+      });
+
+      // Ensure loop works even if loop attribute fails
+      bgm.addEventListener('ended', () => {
+        if (isPlaying || !bgm.paused) {
+          bgm.currentTime = 0;
+          bgm.play().catch(() => {});
+        }
+      });
+
+      // Handle audio loading errors
+      bgm.addEventListener('error', (e) => {
+        console.warn('BGM load error:', e);
+        // Retry loading after a short delay
+        setTimeout(() => {
+          bgm.load();
+        }, 1000);
+      });
+
+      bgm.addEventListener('loadeddata', () => {
+        console.log('BGM loaded successfully');
+      });
+      
+      bgm.addEventListener('volumechange', () => {
+        currentVolume = bgm.volume;
+        isMuted = bgm.muted;
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumePercent = document.getElementById('volumePercent');
+        if (volumeSlider && !volumeSlider.matches(':active')) {
+          volumeSlider.value = Math.round(bgm.volume * 100);
+        }
+        if (volumePercent) {
+          volumePercent.textContent = Math.round(bgm.volume * 100) + '%';
+        }
+        updateVolumeUI();
+      });
+      
+      // Try autoplay WITH SOUND first - best effort
+      const tryAutoplay = () => {
+        bgm.play().then(() => {
+          // Autoplay with sound succeeded!
+          isPlaying = true;
+          audioUnlocked = true;
+          bgm.muted = false;
+          isMuted = false;
+          updatePlayUI();
+          updateVolumeUI();
+        }).catch(() => {
+          // Sound autoplay blocked - fall back to muted autoplay
+          bgm.muted = true;
+          isMuted = true;
+          bgm.play().then(() => {
+            isPlaying = true;
+            updatePlayUI();
+          }).catch(() => {
+            // Even muted autoplay blocked - wait for user interaction
+            isPlaying = false;
+            updatePlayUI();
+          });
+        });
+      };
+
+      // If audio is already loaded, try immediately; otherwise wait for canplay
+      if (bgm.readyState >= 2) {
+        tryAutoplay();
+      } else {
+        bgm.addEventListener('canplay', tryAutoplay, { once: true });
+        // Also try after a delay as fallback
+        setTimeout(tryAutoplay, 2000);
+      }
+    }
+
+    // Toggle play/pause - guaranteed to work on user click
+    function togglePlay() {
+      // Init audio context first (needs user gesture)
+      if (!audioCtx) {
+        initAudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+
+      if (bgm.paused) {
+        // Try to play with sound first
+        bgm.muted = false;
+        isMuted = false;
+        const p = bgm.play();
+        if (p !== undefined && typeof p.then === 'function') {
+          p.then(() => {
+            audioUnlocked = true;
+            updateVolumeUI();
+          }).catch((err) => {
+            // Sound play failed, try muted as fallback
+            console.warn('Play with sound failed, trying muted:', err);
+            bgm.muted = true;
+            isMuted = true;
+            bgm.play().catch((e) => {
+              console.warn('BGM play failed completely:', e);
+              isPlaying = false;
+              updatePlayUI();
+            });
+            updateVolumeUI();
+          });
+        }
+      } else {
+        bgm.pause();
+      }
+    }
+
+    // Update play/pause UI state
+    function updatePlayUI() {
+      const playIcon = document.getElementById('playIcon');
+      const pauseIcon = document.getElementById('pauseIcon');
+      const eqSidebar = document.getElementById('eqSidebar');
+
+      const vinyls = document.querySelectorAll('.vinyl');
+      vinyls.forEach(v => {
+        if (isPlaying) {
+          v.classList.remove('vinyl-paused');
+        } else {
+          v.classList.add('vinyl-paused');
+        }
+      });
+
+      if (isPlaying) {
+        // Playing state: show pause icon so user can click to pause
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        eqSidebar.classList.remove('paused');
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        if (!noteAnimFrame && analyser) {
+          animateNotes();
+        }
+      } else {
+        // Paused state: show play icon so user can click to play
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        eqSidebar.classList.add('paused');
+      }
+    }
+
+    // Update volume icon UI
+    function updateVolumeUI() {
+      const volumeIcon = document.getElementById('volumeIcon');
+      const muteIcon = document.getElementById('muteIcon');
+      if (!volumeIcon || !muteIcon) return;
+      
+      if (isMuted || currentVolume === 0) {
+        volumeIcon.style.display = 'none';
+        muteIcon.style.display = 'block';
+      } else {
+        volumeIcon.style.display = 'block';
+        muteIcon.style.display = 'none';
+      }
+    }
+
+    // Toggle mute
+    function toggleMute() {
+      if (bgm.muted) {
+        // Currently muted, try to unmute
+        // Ensure audio context is active
+        if (!audioCtx) {
+          initAudioContext();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+        bgm.muted = false;
+        audioUnlocked = true;
+        // If paused but should be playing, resume
+        if (bgm.paused) {
+          bgm.play().catch(() => {
+            // Unmute play failed, re-mute
+            bgm.muted = true;
+          });
+        }
+      } else {
+        // Currently playing with sound, mute
+        bgm.muted = true;
+      }
+    }
+
+    // Set volume
+    function setVolume(value) {
+      const vol = value / 100;
+      bgm.volume = vol;
+
+      // Ensure audio context is active when user interacts with volume
+      if (vol > 0 && !audioCtx) {
+        initAudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+
+      // If volume > 0 and was muted, unmute
+      if (vol > 0 && bgm.muted) {
+        bgm.muted = false;
+        audioUnlocked = true;
+        // If paused, try to play
+        if (bgm.paused) {
+          bgm.play().catch(() => {
+            bgm.muted = true;
+            bgm.play().catch(() => {});
+          });
+        }
+      }
+      
+      // If volume = 0, mute
+      if (vol === 0 && !bgm.muted) {
+        bgm.muted = true;
+      }
+    }
+
+    // Unmute on first user interaction (bypass autoplay policy)
+    // Triggers on ANY interaction: mousemove, scroll, keydown, click, touchstart
+    function unlockAudio() {
+      if (audioUnlocked) return;
+
+      // Try to resume/create audio context with user gesture
+      if (!audioCtx) {
+        initAudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+
+      if (bgm.paused) {
+        // Audio is fully paused - try to play with sound
+        const tryPlay = bgm.play();
+        if (tryPlay !== undefined) {
+          tryPlay.then(() => {
+            audioUnlocked = true;
+            bgm.muted = false;
+            isMuted = false;
+            updateVolumeUI();
+            removeUnlockListeners();
+          }).catch(() => {
+            // Can't play with sound - try muted
+            bgm.muted = true;
+            isMuted = true;
+            bgm.play().catch(() => {});
+          });
+        }
+      } else if (bgm.muted) {
+        // Already playing muted - unmute immediately
+        bgm.muted = false;
+        isMuted = false;
+        audioUnlocked = true;
+        updateVolumeUI();
+        removeUnlockListeners();
+      } else {
+        // Already playing with sound
+        audioUnlocked = true;
+        removeUnlockListeners();
+      }
+    }
+
+    function removeUnlockListeners() {
+      setTimeout(() => {
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('keydown', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+        document.removeEventListener('mousemove', unlockAudio);
+        document.removeEventListener('scroll', unlockAudio, true);
+        document.removeEventListener('wheel', unlockAudio);
+      }, 50);
+    }
+
+    // Scroll to track
+    function scrollToTrack(index) {
+      currentTrack = index;
+      const el = document.getElementById('track-' + index);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      updateActiveTrack(index);
+
+      // Close mobile sidebar
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+    }
+
+    // Update active track in sidebar
+    function updateActiveTrack(index) {
+      const items = document.querySelectorAll('.track-item');
+      items.forEach((item, i) => {
+        if (i === index) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      // Update player display
+      const playerDisplay = document.getElementById('playerTrackName');
+      if (playerDisplay) {
+        playerDisplay.textContent = trackNames[index] || '';
+      }
+
+      const nowPlaying = document.getElementById('nowPlayingText');
+      if (nowPlaying) {
+        nowPlaying.textContent = 'TRACK ' + String(index).padStart(2, '0');
+      }
+    }
+
+    // Next track
+    function nextTrack() {
+      const next = (currentTrack + 1) % totalTracks;
+      scrollToTrack(next);
+    }
+
+    // Previous track
+    function prevTrack() {
+      const prev = (currentTrack - 1 + totalTracks) % totalTracks;
+      scrollToTrack(prev);
+    }
+
+    // Hamburger toggle
+    document.getElementById('hamburger').addEventListener('click', function() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    });
+
+    // Intersection Observer for scroll tracking
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0
+    };
+
+    const trackObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const index = parseInt(id.replace('track-', ''));
+          currentTrack = index;
+          updateActiveTrack(index);
+        }
+      });
+    }, observerOptions);
+
+    for (let i = 0; i < totalTracks; i++) {
+      const el = document.getElementById('track-' + i);
+      if (el) trackObserver.observe(el);
+    }
+
+    // Fade in on scroll
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.fade-in-up').forEach(el => {
+      fadeObserver.observe(el);
+    });
+
+    // Skill bar animation
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fills = entry.target.querySelectorAll('.skill-fill');
+          fills.forEach(fill => {
+            const width = fill.getAttribute('data-width');
+            setTimeout(() => {
+              fill.style.width = width + '%';
+            }, 200);
+          });
+          skillObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const skillSection = document.getElementById('track-5');
+    if (skillSection) {
+      skillObserver.observe(skillSection);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextTrack();
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevTrack();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        togglePlay();
+      }
+    });
+
+    // Initialize BGM on page load
+    initHeroTitle();
+    createMusicNotes();
+    initBGM();
+    // Sync initial UI state immediately
+    updatePlayUI();
+    updateVolumeUI();
+
+    // Unmute audio on first user interaction (any interaction counts)
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('keydown', unlockAudio);
+    document.addEventListener('touchstart', unlockAudio);
+    document.addEventListener('mousemove', unlockAudio, { passive: true });
+    document.addEventListener('scroll', unlockAudio, { passive: true, capture: true });
+    document.addEventListener('wheel', unlockAudio, { passive: true });
+
+    // Lightbox functions
+    function openLightbox(src) {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      lightboxImg.src = src;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+        closeCertModal();
+      }
+    });
+
+    // Certificate hover preview & click modal
+    (function() {
+      const preview = document.getElementById('certPreview');
+      const previewImg = document.getElementById('certPreviewImg');
+      const modal = document.getElementById('certModal');
+      const modalImg = document.getElementById('certModalImg');
+      const modalClose = document.getElementById('certModalClose');
+      const certItems = document.querySelectorAll('.award-item-cert');
+
+      certItems.forEach(item => {
+        const certUrl = item.dataset.cert;
+        if (!certUrl) return;
+
+        item.addEventListener('mouseenter', (e) => {
+          previewImg.src = certUrl;
+          positionPreview(item);
+          requestAnimationFrame(() => {
+            preview.classList.add('visible');
+          });
+        });
+
+        item.addEventListener('mousemove', (e) => {
+          if (preview.classList.contains('visible')) {
+            positionPreview(item);
+          }
+        });
+
+        item.addEventListener('mouseleave', () => {
+          preview.classList.remove('visible');
+        });
+
+        item.addEventListener('click', () => {
+          openCertModal(certUrl);
+        });
+      });
+
+      function positionPreview(item) {
+        const rect = item.getBoundingClientRect();
+        const previewW = 300;
+        const gap = 24;
+        let left = rect.right + gap;
+        let top = rect.top;
+
+        // 防止超出右侧视口
+        if (left + previewW > window.innerWidth - 16) {
+          left = rect.left - previewW - gap;
+        }
+        // 防止超出底部
+        const previewH = preview.offsetHeight || 400;
+        if (top + previewH > window.innerHeight - 16) {
+          top = window.innerHeight - previewH - 16;
+        }
+        if (top < 16) top = 16;
+
+        preview.style.left = left + 'px';
+        preview.style.top = top + 'px';
+      }
+
+      function openCertModal(url) {
+        modalImg.src = url;
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        preview.classList.remove('visible');
+      }
+
+      function closeCertModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      window.closeCertModal = closeCertModal;
+
+      modalClose.addEventListener('click', closeCertModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeCertModal();
+      });
+    })();
+
+    // Initial fade-in for landing page elements
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.landing-page .fade-in-up').forEach((el, i) => {
+          setTimeout(() => {
+            el.classList.add('visible');
+          }, i * 150);
+        });
+      }, 100);
+    });
+  </script>
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close" onclick="event.stopPropagation(); closeLightbox();">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </div>
+    <img id="lightboxImg" src="" alt="放大查看" onerror="handleImgError(this)" />
+  </div>
+
+  <!-- Certificate preview tooltip -->
+  <div class="cert-preview" id="certPreview">
+    <img id="certPreviewImg" src="" alt="证书预览" onerror="handleImgError(this)" />
+  </div>
+
+  <!-- Certificate modal -->
+  <div class="cert-modal" id="certModal">
+    <div class="cert-modal-close" id="certModalClose">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </div>
+    <div class="cert-modal-content">
+      <img id="certModalImg" src="" alt="证书" onerror="handleImgError(this)" />
+    </div>
+  </div>
+
+</body>
+</html>
